@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  rkn:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    container_name: rkn
+    ports:
+    - 8000:8000
