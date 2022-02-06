@@ -1,5 +1,5 @@
+import aiohttp
 from fastapi import FastAPI
-from requests import get
 from starlette.responses import PlainTextResponse
 
 app = FastAPI()
@@ -14,10 +14,12 @@ async def index():
 
 @app.get('/rkn.rsc')
 async def index():
-    response = get(URL)
-    data = response.json()
-    content = "/ip firewall address-list\n"
-    for ip in data:
-        if ":" not in data:
-            content += f"add list=rkn address={ip} comment=RKN\n"
-    return PlainTextResponse(content=content)
+    async with aiohttp.ClientSession() as session:
+        async with session.get(URL) as resp:
+            print(resp.status)
+            data = await resp.json()
+            content = "/ip firewall address-list\n"
+            for ip in data:
+                if ":" not in ip:
+                    content += f"add list=rkn address={ip} comment=RKN\n"
+            return PlainTextResponse(content=content)
