@@ -18,5 +18,6 @@ async def index():
     data = response.json()
     content = "/ip firewall address-list\n"
     for ip in data:
-        content += f"add list=rkn address={ip} comment=RKN\n"
+        if ":" not in data:
+            content += f"add list=rkn address={ip} comment=RKN\n"
     return PlainTextResponse(content=content)
